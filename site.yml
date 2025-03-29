@@ -1,0 +1,9 @@
+---
+- name: Apply common configuration to all servers
+  hosts: all
+  become: true
+  roles:
+    - common
+    - geerlingguy.docker
+  vars:
+    docker_install_compose: true

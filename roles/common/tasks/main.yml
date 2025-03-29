@@ -1,15 +1,15 @@
 ---
 - name: Update apt cache
-  apt:
-    update_cache: yes
+  ansible.legacy.apt:
+    update_cache: true
     cache_valid_time: 3600
 
 - name: Upgrade all packages
-  apt:
+  ansible.legacy.apt:
     upgrade: full
 
 - name: Install common packages
-  apt:
+  ansible.legacy.apt:
     name:
       - vim
       - curl
@@ -17,18 +17,8 @@
       - git
       - htop
       - net-tools
-      - fail2ban
     state: present
-
-- name: Ensure NTP is installed and running
-  apt:
-    name: ntp
-    state: present
-  service:
-    name: ntp
-    state: started
-    enabled: yes
 
 - name: Configure timezone
-  timezone:
-    name: UTC 
+  community.general.timezone:
+    name: Etc/UTC
