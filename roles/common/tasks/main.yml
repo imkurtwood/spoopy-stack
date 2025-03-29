@@ -1,0 +1,34 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Upgrade all packages
+  apt:
+    upgrade: full
+
+- name: Install common packages
+  apt:
+    name:
+      - vim
+      - curl
+      - wget
+      - git
+      - htop
+      - net-tools
+      - fail2ban
+    state: present
+
+- name: Ensure NTP is installed and running
+  apt:
+    name: ntp
+    state: present
+  service:
+    name: ntp
+    state: started
+    enabled: yes
+
+- name: Configure timezone
+  timezone:
+    name: UTC 

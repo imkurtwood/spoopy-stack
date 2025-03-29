@@ -1,0 +1,19 @@
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+[docker]
+# Add your web servers here
+# Example:
+# web1.example.com
+# web2.example.com
+
+[database]
+# Add your database servers here
+# Example:
+# db1.example.com
+# db2.example.com
+
+[monitoring]
+# Add your monitoring servers here
+# Example:
+# monitoring.example.com 
