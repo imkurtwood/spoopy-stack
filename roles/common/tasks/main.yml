@@ -72,4 +72,3 @@
     state: enabled
 
 # TODO: Add setup for OTEL Collector
-# TODO: Add firewall setup (allow only SSH, HTTP, and HTTPS)

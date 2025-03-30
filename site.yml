@@ -6,7 +6,7 @@
     - common
     - geerlingguy.security
     - geerlingguy.docker
-
+    # - otel
 - name: Install buyback services
   hosts: buyback
   become: true

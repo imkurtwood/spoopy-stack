@@ -1,0 +1,77 @@
+receivers:
+  # Host metrics
+  hostmetrics:
+    collection_interval: 15s
+    scrapers:
+      cpu:
+      disk:
+      load:
+      memory:
+      network:
+      processes:
+      process:
+      filesystem:
+      swap:
+
+  # Docker metrics
+  docker_stats:
+    endpoint: unix:///var/run/docker.sock
+    collection_interval: 15s
+    initial_delay: 5s
+    container_labels_to_metric_labels:
+      container.name: container.name
+      container.id: container.id
+
+  # Host logs
+  filelog:
+    include: [ /var/log/syslog, /var/log/auth.log ]
+    start_at: beginning
+    include_file_path: true
+    include_file_name: false
+    poll_interval: 1s
+
+  # Docker logs
+  docker_logs:
+    endpoint: unix:///var/run/docker.sock
+    container_name: "*"
+    include_source: true
+
+processors:
+  batch:
+    timeout: 1s
+    send_batch_size: 1024
+
+exporters:
+  # Grafana Cloud Metrics
+  prometheusremotewrite:
+    endpoint: "{{ otel_grafana_cloud_metrics_endpoint }}"
+    auth:
+      basic_auth:
+        username: "{{ otel_grafana_cloud_metrics_username }}"
+        password: "{{ otel_grafana_cloud_metrics_password }}"
+    resource_to_telemetry_conversion:
+      enabled: true
+
+  # Grafana Cloud Logs
+  loki:
+    endpoint: "{{ otel_grafana_cloud_logs_endpoint }}"
+    auth:
+      basic_auth:
+        username: "{{ otel_grafana_cloud_logs_username }}"
+        password: "{{ otel_grafana_cloud_logs_password }}"
+    labels:
+      resource:
+        host.name: "host.name"
+        container.name: "container.name"
+        container.id: "container.id"
+
+service:
+  pipelines:
+    metrics:
+      receivers: [hostmetrics, docker_stats]
+      processors: [batch]
+      exporters: [prometheusremotewrite]
+    logs:
+      receivers: [filelog, docker_logs]
+      processors: [batch]
+      exporters: [loki]

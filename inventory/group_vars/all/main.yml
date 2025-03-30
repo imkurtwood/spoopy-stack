@@ -7,3 +7,5 @@ firewall_allowed_tcp_ports:
   - "22"
   - "80"
   - "443"
+otel_grafana_cloud_metrics_endpoint: "https://prometheus-prod-XX-central.grafana.net/api/prom/push"
+otel_grafana_cloud_logs_endpoint: "https://logs-prod-XX-central.grafana.net/loki/api/v1/push"

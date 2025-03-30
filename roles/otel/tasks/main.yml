@@ -1,0 +1,42 @@
+---
+- name: Create OTEL Collector systemd service directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/otel-collector.service.d
+    state: directory
+    mode: '0755'
+
+- name: Install OTEL Collector
+  ansible.builtin.apt:
+    name: opentelemetry-collector
+    state: present
+    update_cache: true
+
+- name: Create OTEL Collector config directory
+  ansible.builtin.file:
+    path: /etc/otel-collector
+    state: directory
+    mode: '0755'
+
+- name: Configure OTEL Collector
+  ansible.builtin.template:
+    src: otel-collector-config.yaml.j2
+    dest: /etc/otel-collector/config.yaml
+    mode: '0644'
+  notify: restart otel-collector
+
+- name: Create systemd service file for OTEL Collector
+  ansible.builtin.template:
+    src: otel-collector.service.j2
+    dest: /etc/systemd/system/otel-collector.service
+    mode: '0644'
+  notify: restart otel-collector
+
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Enable and start OTEL Collector service
+  ansible.builtin.systemd:
+    name: otel-collector
+    state: started
+    enabled: true
