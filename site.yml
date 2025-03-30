@@ -12,9 +12,11 @@
   become: true
   roles:
     - buyback
+    - caddy
 
 - name: Install wanderer services
   hosts: wanderer
   become: true
   roles:
     - wanderer
+    - caddy

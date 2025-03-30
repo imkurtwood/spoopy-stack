@@ -3,16 +3,12 @@ services:
     image: {{ wanderer_eve_route_builder_image }}
     container_name: eve-route-builder
     restart: always
-    networks:
-      wanderer-internal:
     environment:
       - PORT=2001
 
   wanderer_db:
     image: {{ wanderer_postgres_image }}
     restart: unless-stopped
-    networks:
-      wanderer-internal:
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
@@ -25,14 +21,13 @@ services:
     depends_on:
       - eve-route-builder
       - wanderer_db
+    expose:
+      - 8000
     labels:
-      - "virtual.host={{wanderer_domain}}" # your domain
-      - "virtual.alias=www.{{wanderer_domain}}" # alias for your domain (optional)
-      - "virtual.port=8000" # exposed port of this container
-      - "virtual.tls-email={{wanderer_tls_email}}" # ssl is now on
-    networks:
-      wanderer-internal:
-      web:
+      virtual.host: {{ wanderer_domain }}  # your domain
+      virtual.alias: www.{{ wanderer_domain }}  # alias for your domain (optional)
+      virtual.port: 8000  # exposed port of this container
+      virtual.tls-email: {{ wanderer_tls_email | default('') }}  # ssl is now on
     healthcheck:
       disable: true
     ulimits:
@@ -40,7 +35,6 @@ services:
         soft: -1
         hard: -1
     environment:
-      - DATABASE_URL=postgresql://postgres:{{ wanderer_db_password }}@wanderer_db:5432/postgres
       - CUSTOM_ROUTE_BASE_URL=http://eve-route-builder:2001
       - PHX_SERVER=true
       - ECTO_IPV6=false
@@ -52,8 +46,3 @@ services:
 volumes:
   db-data:
     driver: local
-
-networks:
-  wanderer-internal:
-  web:
-    external: true

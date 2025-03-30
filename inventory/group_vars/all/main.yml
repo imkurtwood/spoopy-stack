@@ -3,3 +3,7 @@ ansible_user: kurtwood
 docker_install_compose: true
 security_sudoers_passwordless:
   - "{{ ansible_user }}"
+firewall_allowed_tcp_ports:
+  - "22"
+  - "80"
+  - "443"

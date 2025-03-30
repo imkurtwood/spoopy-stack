@@ -1,0 +1,2 @@
+caddy_dir: "{{ ansible_env.HOME }}/caddy"
+caddy_tls_email: ""

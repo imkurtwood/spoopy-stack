@@ -11,3 +11,5 @@ roles:
     version: 7.4.7
   - name: geerlingguy.security
     version: 3.0.0
+  - name: geerlingguy.firewall
+    version: 2.6.0

@@ -1,6 +1,6 @@
 buyback_nginx_port: 8080
 buyback_domain: "buyback.kurtwood.me"
-buyback_csrf_trusted_origins: "http://localhost:8080 {{ buyback_domain }}"
+buyback_csrf_trusted_origins: "http://localhost:8080 http://{{ buyback_domain }}"
 buyback_allowed_hosts: "localhost,127.0.0.1,{{ buyback_domain }}"
 buyback_postgres_image: "postgres:16-alpine"
 buyback_redis_image: "redis:7-alpine"

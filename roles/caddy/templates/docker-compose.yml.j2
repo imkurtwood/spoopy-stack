@@ -10,12 +10,15 @@ services:
       - "80:80"
       - "443:443"
     networks:
-      web:
+      default:
+      buyback_default:
+      wanderer_default:
 
 networks:
-  web:
-    name: web
-    driver: bridge
+  buyback_default:
+    external: true
+  wanderer_default:
+    external: true
 
 volumes:
   caddy-certificates:

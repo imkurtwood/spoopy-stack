@@ -5,8 +5,6 @@ services:
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     env_file:
       - ./.env
-    networks:
-      buyback-internal:
     volumes:
       - static_volume:/code/staticfiles
       - media_volume:/code/mediafiles
@@ -16,8 +14,6 @@ services:
   db:
     image: {{ buyback_postgres_image }}
     restart: always
-    networks:
-      buyback-internal:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
@@ -25,8 +21,6 @@ services:
 
   redis:
     image: {{ buyback_redis_image }}
-    networks:
-      buyback-internal:
 
   celery:
     build: .
@@ -36,8 +30,6 @@ services:
       - .:/code
     env_file:
       - ./.env
-    networks:
-      buyback-internal:
     depends_on:
       - db
       - redis
@@ -51,19 +43,13 @@ services:
       - media_volume:/code/mediafiles
     depends_on:
       - web
-    networks:
-      buyback-internal:
-      web:
     labels:
-      - "virtual.host={{buyback_domain}}" # your domain
-      - "virtual.alias=www.{{buyback_domain}}" # alias for your domain (optional)
-      - "virtual.port=80" # exposed port of this container
-      - "virtual.tls-email={{buyback_tls_email}}" # ssl is now on
-
-networks:
-  buyback-internal:
-  web:
-    external: true
+      virtual.host: {{ buyback_domain }} # your domain
+      virtual.alias: www.{{ buyback_domain }} # alias for your domain (optional)
+      virtual.port: 80 # exposed port of this container
+      virtual.tls-email: {{ buyback_tls_email | default('') }} # ssl is now on
+      virtual.proxy.directives: |
+        header_up Host {host}
 
 volumes:
   postgres_data:

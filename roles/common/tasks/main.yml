@@ -1,4 +1,25 @@
 ---
+- name: Disable NTP temporarily
+  ansible.legacy.command:
+    cmd: timedatectl set-ntp false
+  changed_when: false
+
+- name: Set system time from runner
+  ansible.legacy.command:
+    cmd: "date -s '{{ ansible_date_time.iso8601 }}'"
+  changed_when: false
+
+- name: Re-enable NTP
+  ansible.legacy.command:
+    cmd: timedatectl set-ntp true
+  changed_when: false
+
+- name: Ensure systemd-timesyncd is running and enabled
+  ansible.legacy.service:
+    name: systemd-timesyncd
+    state: started
+    enabled: true
+
 - name: Update apt cache
   ansible.legacy.apt:
     update_cache: true
@@ -17,11 +38,38 @@
       - git
       - htop
       - net-tools
+      - ufw
     state: present
 
 - name: Configure timezone
   community.general.timezone:
     name: Etc/UTC
+
+- name: Set logging
+  community.general.ufw:
+    logging: 'on'
+
+- name: Allow HTTP traffic
+  community.general.ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+
+- name: Allow HTTPS traffic
+  community.general.ufw:
+    rule: allow
+    port: '443'
+    proto: tcp
+
+- name: Allow SSH traffic
+  community.general.ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: Enable UFW
+  community.general.ufw:
+    state: enabled
 
 # TODO: Add setup for OTEL Collector
 # TODO: Add firewall setup (allow only SSH, HTTP, and HTTPS)
