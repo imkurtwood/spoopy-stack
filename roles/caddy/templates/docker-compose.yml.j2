@@ -1,0 +1,22 @@
+services:
+  caddy-gen:
+    container_name: caddy-gen
+    image: "wemakeservices/caddy-gen:latest"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - caddy-certificates:/data/caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      web:
+
+networks:
+  web:
+    name: web
+    driver: bridge
+
+volumes:
+  caddy-certificates:
+    driver: local

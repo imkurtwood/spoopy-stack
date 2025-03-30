@@ -12,3 +12,9 @@
   become: true
   roles:
     - buyback
+
+- name: Install wanderer services
+  hosts: wanderer
+  become: true
+  roles:
+    - wanderer

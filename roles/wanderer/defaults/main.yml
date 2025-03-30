@@ -1,0 +1,5 @@
+wanderer_postgres_image: "postgres:16-alpine"
+wanderer_image: "wandererltd/community-edition:1.59.1"
+wanderer_eve_route_builder_image: "dansylvest/eve-route-builder:main"
+wanderer_web_app_url: "http://10.1.1.222:8000"
+wanderer_dir: "{{ ansible_user_dir }}/wanderer"

@@ -1,0 +1,59 @@
+services:
+  eve-route-builder:
+    image: {{ wanderer_eve_route_builder_image }}
+    container_name: eve-route-builder
+    restart: always
+    networks:
+      wanderer-internal:
+    environment:
+      - PORT=2001
+
+  wanderer_db:
+    image: {{ wanderer_postgres_image }}
+    restart: unless-stopped
+    networks:
+      wanderer-internal:
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD={{ wanderer_db_password }}
+
+  wanderer:
+    image: {{ wanderer_image }}
+    restart: always
+    command: sh -c "sleep 10 && /app/entrypoint.sh db createdb && /app/entrypoint.sh db migrate && /app/entrypoint.sh run"
+    depends_on:
+      - eve-route-builder
+      - wanderer_db
+    labels:
+      - "virtual.host={{wanderer_domain}}" # your domain
+      - "virtual.alias=www.{{wanderer_domain}}" # alias for your domain (optional)
+      - "virtual.port=8000" # exposed port of this container
+      - "virtual.tls-email={{wanderer_tls_email}}" # ssl is now on
+    networks:
+      wanderer-internal:
+      web:
+    healthcheck:
+      disable: true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    environment:
+      - DATABASE_URL=postgresql://postgres:{{ wanderer_db_password }}@wanderer_db:5432/postgres
+      - CUSTOM_ROUTE_BASE_URL=http://eve-route-builder:2001
+      - PHX_SERVER=true
+      - ECTO_IPV6=false
+      - ERL_AFLAGS=-proto_dist inet6_tcp
+      - ERL_MAX_PORTS=1024
+    env_file:
+      - wanderer-conf.env
+
+volumes:
+  db-data:
+    driver: local
+
+networks:
+  wanderer-internal:
+  web:
+    external: true

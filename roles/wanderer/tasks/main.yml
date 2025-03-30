@@ -1,2 +1,52 @@
 # 1. Template the wanderer.env file with the correct values from the .env.example file (Use ansible vault to encrypt the file)
 # 2. Run docker compose up -d
+---
+- name: Make sure that current user has docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create wanderer directory
+  ansible.builtin.file:
+    path: "{{ wanderer_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Template the wanderer.env file
+  ansible.builtin.template:
+    src: "wanderer-conf.env.j2"
+    dest: "{{ wanderer_dir }}/wanderer-conf.env"
+    mode: "0600"
+
+- name: Template the docker-compose.yml
+  ansible.builtin.template:
+    src: "docker-compose.yml.j2"
+    dest: "{{ wanderer_dir }}/docker-compose.yml"
+    mode: "0600"
+
+- name: Run docker compose up
+  community.docker.docker_compose_v2:
+    project_src: "{{ wanderer_dir }}"
+    project_name: "wanderer"
+    files:
+      - docker-compose.yml
+    pull: always
+    build: always
+    state: present
+
+- name: Check if containers are running
+  community.docker.docker_compose_v2:
+    project_src: "{{ wanderer_dir }}"
+    project_name: "wanderer"
+    files:
+      - docker-compose.yml
+    state: present
+  register: compose_status
+
+- name: Verify container status
+  ansible.builtin.assert:
+    that:
+      - "compose_status is success"
+    fail_msg: "Docker compose services are not running properly"
+    success_msg: "All docker compose services are running successfully"
