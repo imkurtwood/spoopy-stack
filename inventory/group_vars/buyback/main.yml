@@ -1,3 +1,5 @@
 buyback_nginx_port: 8080
 buyback_csrf_trusted_origins: "http://localhost:8080 http://10.1.1.222:8080"
 buyback_allowed_hosts: "localhost,127.0.0.1,10.1.1.222"
+buyback_postgres_image: "postgres:16-alpine"
+buyback_redis_image: "redis:7-alpine"
