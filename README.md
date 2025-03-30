@@ -1,6 +1,6 @@
 # Spoopy Stack Ansible Playbook
 
-This Ansible playbook is used to configure and deploy Spoopy services across different server groups. It includes roles for common server configuration, security hardening, and service-specific deployments.
+This Ansible playbook is used to configure and deploy Spoopy services across different server groups. It includes roles for common server configuration, security hardening, and service-specific deployments. This automation allows us to bring up Spoopy Service from a bare Debian-based installation to serving traffic for pilots in around 2.5 minutes on x86 and ARM64 architectures.
 
 ## Prerequisites
 
@@ -46,8 +46,7 @@ ansible-playbook site.yml --vault-pass-file .vault_pass --ask-become-pass
 
 To edit sensitive variables:
 ```bash
-ansible-vault edit ./inventory/group_vars/buyback/vault.yml
-ansible-vault edit ./inventory/group_vars/wanderer/vault.yml
+ansible-vault edit ./inventory/group_vars/spoopy/vault.yml
 ```
 
 ## Playbook Structure
@@ -62,8 +61,7 @@ The playbook consists of the following main components:
 ### Host Groups
 
 - `all`: Common configuration for all servers
-- `buyback`: Buyback service deployment
-- `wanderer`: Wanderer service deployment
+- `spoopy`: Spoopy services deployment
 
 ## Roles
 
