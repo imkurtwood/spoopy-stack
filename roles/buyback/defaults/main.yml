@@ -1,14 +1,28 @@
+# Application
 buyback_allowed_hosts: "localhost,127.0.0.1"
 buyback_debug: false
+# Database
 buyback_db_name: "buyback"
 buyback_db_username: "buyback"
 buyback_db_hostname: "db"
 buyback_db_port: 5432
+# Redis
 buyback_redis_backend: "redis://redis:6379/0"
 buyback_redis_broker_url: "redis://redis:6379/0"
+# Nginx
 buyback_nginx_port: 80
 buyback_dir: "{{ ansible_env.HOME }}/spoopy-buyback"
 buyback_csrf_trusted_origins: "http://localhost:8080"
+# TLS
+buyback_tls_email: ""
+# Backup
+buyback_s3_bucket: "spoopy-backups"
+buyback_s3_prefix: "buyback"
+buyback_s3_s3v4: "yes"
+buyback_s3_endpoint: "https://winston.int.kurtwood.me:9000"
+buyback_schedule: "@daily"
+buyback_backup_retention: "30 days ago"
+# Docker
 buyback_postgres_image: "postgres:13"
 buyback_redis_image: "redis:7"
-buyback_tls_email: ""
+buyback_backup_image: "itbm/postgres-backup-s3:latest"

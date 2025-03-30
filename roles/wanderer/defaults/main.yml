@@ -1,6 +1,22 @@
-wanderer_postgres_image: "postgres:16-alpine"
-wanderer_image: "wandererltd/community-edition:1.59.1"
+# Application
+wanderer_domain: "wanderer.int.kurtwood.me"
 wanderer_eve_route_builder_image: "dansylvest/eve-route-builder:main"
 wanderer_web_app_url: "http://10.1.1.222:8000"
 wanderer_dir: "{{ ansible_env.HOME }}/wanderer"
 wanderer_tls_email: ""
+# Database
+wanderer_db_name: "wanderer"
+wanderer_db_username: "wanderer"
+wanderer_db_hostname: "wanderer_db"
+wanderer_db_port: 5432
+# Docker
+wanderer_postgres_image: "postgres:16-alpine"
+wanderer_image: "wandererltd/community-edition:1.59.1"
+wanderer_backup_image: "itbm/postgres-backup-s3:latest"
+# Backup
+wanderer_s3_bucket: "spoopy-backups"
+wanderer_s3_prefix: "wanderer"
+wanderer_s3_s3v4: "yes"
+wanderer_s3_endpoint: "https://winston.int.kurtwood.me:9000"
+wanderer_schedule: "@daily"
+wanderer_backup_retention: "30 days ago"

@@ -51,6 +51,12 @@ services:
       virtual.proxy.directives: |
         header_up Host {host}
 
+  backup:
+    image: {{ buyback_backup_image }}
+    restart: always
+    env_file:
+      - ./.env
+
 volumes:
   postgres_data:
   static_volume:

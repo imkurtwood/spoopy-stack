@@ -8,15 +8,9 @@
     - geerlingguy.docker
     # - otel
 - name: Install buyback services
-  hosts: buyback
+  hosts: spoopy
   become: true
   roles:
     - buyback
-    - caddy
-
-- name: Install wanderer services
-  hosts: wanderer
-  become: true
-  roles:
     - wanderer
     - caddy

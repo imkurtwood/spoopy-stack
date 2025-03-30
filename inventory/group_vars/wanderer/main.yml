@@ -1,5 +1,0 @@
-wanderer_postgres_image: "postgres:16-alpine"
-wanderer_image: "wandererltd/community-edition:latest"
-wanderer_eve_route_builder_image: "dansylvest/eve-route-builder:main"
-wanderer_web_app_url: "http://{{ wanderer_domain }}"
-wanderer_domain: "wanderer.kurtwood.me"
