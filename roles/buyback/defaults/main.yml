@@ -1,0 +1,13 @@
+buyback_allowed_hosts: "localhost,127.0.0.1"
+buyback_debug: false
+buyback_db_name: "buyback"
+buyback_db_username: "buyback"
+buyback_db_hostname: "db"
+buyback_db_port: 5432
+buyback_redis_backend: "redis://redis:6379/0"
+buyback_redis_broker_url: "redis://redis:6379/0"
+buyback_nginx_port: 80
+buyback_dir: "{{ playbook_dir }}/buyback"
+buyback_csrf_trusted_origins: "http://localhost:8080"
+buyback_postgres_image: "postgres:13"
+buyback_redis_image: "redis:7"

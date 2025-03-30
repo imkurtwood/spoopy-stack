@@ -1,0 +1,52 @@
+---
+- name: Make sure that current user has docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Clone Buyback repo
+  ansible.builtin.git:
+    repo: "https://github.com/olf-folks/spoopy-buyback-2.git"
+    dest: "{{ buyback_dir }}"
+    version: "main"
+    force: true
+
+- name: Copy .env file
+  ansible.builtin.template:
+    src: ".env.j2"
+    dest: "{{ buyback_dir }}/.env"
+    mode: "0644"
+
+- name: Copy docker-compose.yml file
+  ansible.builtin.template:
+    src: "docker-compose.yml.j2"
+    dest: "{{ buyback_dir }}/docker-compose.yml"
+    mode: "0644"
+    force: true
+
+- name: Run docker compose up
+  community.docker.docker_compose_v2:
+    project_src: "{{ buyback_dir }}"
+    project_name: "buyback"
+    files:
+      - docker-compose.yml
+    pull: always
+    build: always
+    state: present
+
+- name: Check if containers are running
+  community.docker.docker_compose_v2:
+    project_src: "{{ buyback_dir }}"
+    project_name: "buyback"
+    files:
+      - docker-compose.yml
+    state: present
+  register: compose_status
+
+- name: Verify container status
+  ansible.builtin.assert:
+    that:
+      - "compose_status is success"
+    fail_msg: "Docker compose services are not running properly"
+    success_msg: "All docker compose services are running successfully"

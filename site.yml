@@ -4,6 +4,11 @@
   become: true
   roles:
     - common
+    - geerlingguy.security
     - geerlingguy.docker
-  vars:
-    docker_install_compose: true
+
+- name: Install buyback services
+  hosts: buyback
+  become: true
+  roles:
+    - buyback

@@ -1,0 +1,2 @@
+# 1. Template the wanderer.env file with the correct values from the .env.example file (Use ansible vault to encrypt the file)
+# 2. Run docker compose up -d
