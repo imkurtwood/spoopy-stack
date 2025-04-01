@@ -5,51 +5,38 @@
     groups: docker
     append: true
 
-- name: Make sure that traefik_ingress network exists
-  community.docker.docker_network:
-    name: traefik_ingress
-    state: present
+- name: Create traefik directory
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/traefik"
+    state: directory
+    mode: "0755"
 
-- name: Clone Buyback repo
-  ansible.builtin.git:
-    repo: "https://github.com/olf-folks/spoopy-buyback-2.git"
-    dest: "{{ buyback_dir }}"
-    version: "main"
-    force: true
-
-- name: Copy Dockerfile
+- name: Template traefik.yml
   ansible.builtin.template:
-    src: "Dockerfile.j2"
-    dest: "{{ buyback_dir }}/Dockerfile"
+    src: "traefik.yml.j2"
+    dest: "{{ ansible_env.HOME }}/traefik/traefik.yml"
     mode: "0644"
 
-- name: Copy .env file
-  ansible.builtin.template:
-    src: ".env.j2"
-    dest: "{{ buyback_dir }}/.env"
-    mode: "0644"
-
-- name: Copy docker-compose.yml file
+- name: Template docker-compose.yml
   ansible.builtin.template:
     src: "docker-compose.yml.j2"
-    dest: "{{ buyback_dir }}/docker-compose.yml"
+    dest: "{{ ansible_env.HOME }}/traefik/docker-compose.yml"
     mode: "0644"
-    force: true
 
 - name: Run docker compose up
   community.docker.docker_compose_v2:
-    project_src: "{{ buyback_dir }}"
-    project_name: "buyback"
-    files:
-      - docker-compose.yml
+    project_src: "{{ ansible_env.HOME }}/traefik"
+    project_name: "traefik"
     pull: always
     build: always
     state: present
+    files:
+      - docker-compose.yml
 
 - name: Check if containers are running
   community.docker.docker_compose_v2:
-    project_src: "{{ buyback_dir }}"
-    project_name: "buyback"
+    project_src: "{{ ansible_env.HOME }}/traefik"
+    project_name: "traefik"
     files:
       - docker-compose.yml
     state: present

@@ -72,7 +72,7 @@ The playbook includes the following roles:
 - `geerlingguy.docker`: Docker installation and configuration
 - `buyback`: Buyback service deployment
 - `wanderer`: Wanderer service deployment
-- `caddy`: Caddy reverse-proxy server configuration
+- `traefik`: Traefik reverse-proxy server configuration
 
 ## Development
 

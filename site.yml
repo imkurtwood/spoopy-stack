@@ -11,6 +11,6 @@
   hosts: spoopy
   become: true
   roles:
+    - traefik
     - buyback
     - wanderer
-    - caddy

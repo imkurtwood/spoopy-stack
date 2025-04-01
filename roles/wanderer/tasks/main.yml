@@ -7,6 +7,11 @@
     groups: docker
     append: true
 
+- name: Make sure that traefik_ingress network exists
+  community.docker.docker_network:
+    name: traefik_ingress
+    state: present
+
 - name: Create wanderer directory
   ansible.builtin.file:
     path: "{{ wanderer_dir }}"

@@ -41,21 +41,24 @@ services:
     volumes:
       - static_volume:/code/staticfiles
       - media_volume:/code/mediafiles
+    networks:
+      - default
+      - traefik_ingress
     depends_on:
       - web
     labels:
-      virtual.host: {{ buyback_domain }} # your domain
-      virtual.alias: www.{{ buyback_domain }} # alias for your domain (optional)
-      virtual.port: 80 # exposed port of this container
-      virtual.tls-email: {{ buyback_tls_email | default('') }} # ssl is now on
-      virtual.proxy.directives: |
-        header_up Host {host}
-
+      - traefik.enable=true
+      - traefik.http.routers.buyback.rule=Host(`{{ buyback_domain }}`)
+      # - traefik.docker.network=traefik_ingress
   backup:
     image: {{ buyback_backup_image }}
     restart: always
     env_file:
       - ./.env
+
+networks:
+  traefik_ingress:
+    external: true
 
 volumes:
   postgres_data:

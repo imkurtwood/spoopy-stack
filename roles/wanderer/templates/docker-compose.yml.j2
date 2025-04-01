@@ -23,11 +23,9 @@ services:
       - wanderer_db
     expose:
       - 8000
-    labels:
-      virtual.host: {{ wanderer_domain }}  # your domain
-      virtual.alias: www.{{ wanderer_domain }}  # alias for your domain (optional)
-      virtual.port: 8000  # exposed port of this container
-      virtual.tls-email: {{ wanderer_tls_email | default('') }}  # ssl is now on
+    networks:
+      - default
+      - traefik_ingress
     healthcheck:
       disable: true
     ulimits:
@@ -42,6 +40,9 @@ services:
       - ERL_MAX_PORTS=1024
     env_file:
       - wanderer-conf.env
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.wanderer.rule=Host(`{{ wanderer_domain }}`)
 
   backup:
     image: {{ wanderer_backup_image }}
@@ -51,3 +52,7 @@ services:
 volumes:
   db-data:
     driver: local
+
+networks:
+  traefik_ingress:
+    external: true

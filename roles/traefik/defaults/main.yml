@@ -1,0 +1,2 @@
+traefik_tls_email: ""
+traefik_image: "traefik:v3.3.5"
