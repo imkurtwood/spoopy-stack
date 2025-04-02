@@ -1,10 +1,7 @@
 ---
-# Grafana Cloud Metrics configuration
-otel_grafana_cloud_metrics_endpoint: "https://prometheus-prod-XX-central.grafana.net/api/prom/push"  # Replace with your endpoint
-otel_grafana_cloud_metrics_username: "your-metrics-username"  # Replace with your username
-otel_grafana_cloud_metrics_password: "your-metrics-password"  # Replace with your password
-
-# Grafana Cloud Logs configuration
-otel_grafana_cloud_logs_endpoint: "https://logs-prod-XX-central.grafana.net/loki/api/v1/push"  # Replace with your endpoint
-otel_grafana_cloud_logs_username: "your-logs-username"  # Replace with your username
-otel_grafana_cloud_logs_password: "your-logs-password"  # Replace with your password
+otel_collector_version: "0.123.1"
+otel_collector_arch: "arm64"
+otel_collector_deb_url: "https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v{{ otel_collector_version }}/otelcol-contrib_{{ otel_collector_version }}_linux_{{ otel_collector_arch }}.deb"
+otel_grafana_cloud_endpoint: "https://otlp-gateway-prod-eu-west-2.grafana.net/otlp"
+otel_grafana_cloud_username: "{{ lookup('env', 'OTEL_GRAFANA_CLOUD_USERNAME') }}"
+otel_grafana_cloud_password: "{{ lookup('env', 'OTEL_GRAFANA_CLOUD_PASSWORD') }}"

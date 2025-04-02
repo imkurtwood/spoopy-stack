@@ -5,8 +5,8 @@
   roles:
     - common
     - geerlingguy.security
+    - otel
     - geerlingguy.docker
-    # - otel
 - name: Install buyback services
   hosts: spoopy
   become: true

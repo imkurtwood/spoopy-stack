@@ -1,42 +1,37 @@
 ---
-- name: Create OTEL Collector systemd service directory
-  ansible.builtin.file:
-    path: /etc/systemd/system/otel-collector.service.d
-    state: directory
-    mode: '0755'
+- name: Download OTEL Collector DEB
+  ansible.builtin.get_url:
+    url: "{{ otel_collector_deb_url }}"
+    dest: /tmp/otelcol-contrib.deb
+    mode: '0644'
 
 - name: Install OTEL Collector
   ansible.builtin.apt:
-    name: opentelemetry-collector
+    deb: /tmp/otelcol-contrib.deb
     state: present
     update_cache: true
 
-- name: Create OTEL Collector config directory
+- name: Create OTEL Collector directory
   ansible.builtin.file:
-    path: /etc/otel-collector
+    path: /etc/otelcol-contrib
     state: directory
     mode: '0755'
+
+- name: Add otelcol-contrib user to docker group
+  ansible.builtin.user:
+    name: otelcol-contrib
+    groups: docker
+    append: true
 
 - name: Configure OTEL Collector
   ansible.builtin.template:
     src: otel-collector-config.yaml.j2
-    dest: /etc/otel-collector/config.yaml
+    dest: /etc/otelcol-contrib/config.yaml
     mode: '0644'
-  notify: restart otel-collector
-
-- name: Create systemd service file for OTEL Collector
-  ansible.builtin.template:
-    src: otel-collector.service.j2
-    dest: /etc/systemd/system/otel-collector.service
-    mode: '0644'
-  notify: restart otel-collector
-
-- name: Reload systemd daemon
-  ansible.builtin.systemd:
-    daemon_reload: true
+  notify: Restart otel-collector
 
 - name: Enable and start OTEL Collector service
   ansible.builtin.systemd:
-    name: otel-collector
+    name: otelcol-contrib
     state: started
     enabled: true

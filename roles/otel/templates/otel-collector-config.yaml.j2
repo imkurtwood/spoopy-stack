@@ -1,3 +1,13 @@
+extensions:
+  basicauth:
+    client_auth:
+      username: "{{ otel_grafana_cloud_username }}"
+      password: "{{ otel_grafana_cloud_password }}"
+  basicauth/prometheus:
+    client_auth:
+      username: "{{ otel_grafana_cloud_prometheus_username }}"
+      password: "{{ otel_grafana_cloud_prometheus_password }}"
+
 receivers:
   # Host metrics
   hostmetrics:
@@ -6,12 +16,11 @@ receivers:
       cpu:
       disk:
       load:
+      filesystem:
       memory:
       network:
-      processes:
-      process:
-      filesystem:
-      swap:
+      paging:
+      system:
 
   # Docker metrics
   docker_stats:
@@ -19,59 +28,64 @@ receivers:
     collection_interval: 15s
     initial_delay: 5s
     container_labels_to_metric_labels:
-      container.name: container.name
-      container.id: container.id
+      container.name: container-name
+      container.id: container-id
+      container.image: container-image
+    metrics:
+      container.cpu.usage.system:
+        enabled: false
+      container.memory.total_rss:
+        enabled: true
 
-  # Host logs
-  filelog:
-    include: [ /var/log/syslog, /var/log/auth.log ]
-    start_at: beginning
-    include_file_path: true
-    include_file_name: false
-    poll_interval: 1s
-
-  # Docker logs
-  docker_logs:
-    endpoint: unix:///var/run/docker.sock
-    container_name: "*"
-    include_source: true
+  # # Host logs
+  # journald:
+  #   directory: /var/log/journal
+  # syslog:
+  #   tcp:
+  #     listen_address: "127.0.0.1:514"
+  #   protocol: rfc5424
+  #   operators:
+  #     - type: regex_parser
+  #       regex: '^(?P<container_name>[^/]+)/(?P<container_id>\w+)'
+  #       parse_from: attributes["syslog.appname"]
+  #       parse_to: attributes
 
 processors:
   batch:
     timeout: 1s
     send_batch_size: 1024
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 20
+    spike_limit_percentage: 15
+  resource:
+    attributes:
+      - action: insert
+        key: host.name
+        value: "{{ ansible_hostname }}"
+      - action: insert
+        key: host.id
+        value: "{{ ansible_host }}"
+      - action: insert
+        key: service.namespace
+        value: "{{ service_namespace | default('production') }}"
 
 exporters:
-  # Grafana Cloud Metrics
   prometheusremotewrite:
-    endpoint: "{{ otel_grafana_cloud_metrics_endpoint }}"
-    auth:
-      basic_auth:
-        username: "{{ otel_grafana_cloud_metrics_username }}"
-        password: "{{ otel_grafana_cloud_metrics_password }}"
+    endpoint: "{{ otel_grafana_cloud_prometheus_endpoint }}"
     resource_to_telemetry_conversion:
       enabled: true
-
-  # Grafana Cloud Logs
-  loki:
-    endpoint: "{{ otel_grafana_cloud_logs_endpoint }}"
     auth:
-      basic_auth:
-        username: "{{ otel_grafana_cloud_logs_username }}"
-        password: "{{ otel_grafana_cloud_logs_password }}"
-    labels:
-      resource:
-        host.name: "host.name"
-        container.name: "container.name"
-        container.id: "container.id"
+      authenticator: basicauth/prometheus
 
 service:
+  extensions: [basicauth, basicauth/prometheus]
   pipelines:
     metrics:
       receivers: [hostmetrics, docker_stats]
-      processors: [batch]
+      processors: [batch, memory_limiter, resource]
       exporters: [prometheusremotewrite]
-    logs:
-      receivers: [filelog, docker_logs]
-      processors: [batch]
-      exporters: [loki]
+    # logs:
+    #   receivers: [journald, syslog]
+    #   processors: [batch]
+    #   exporters: [otlphttp]

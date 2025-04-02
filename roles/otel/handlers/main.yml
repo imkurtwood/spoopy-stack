@@ -1,5 +1,10 @@
 ---
 - name: Restart otel-collector
   ansible.builtin.systemd:
-    name: otel-collector
+    name: otelcol-contrib
+    state: restarted
+
+- name: Restart docker
+  ansible.builtin.systemd:
+    name: docker
     state: restarted
