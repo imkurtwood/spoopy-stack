@@ -87,3 +87,17 @@
 - name: Run the equivalent of "apt-get clean" as a separate step
   ansible.builtin.apt:
     clean: true
+
+- name: Create firmware user
+  ansible.builtin.user:
+    name: firmware
+    groups:
+      - firmware
+      - docker
+      - sudo
+    append: true
+    state: present
+    create_home: true
+    home: /home/firmware
+    shell: /bin/bash
+    password: "{{ firmware_password | password_hash('sha512') }}"

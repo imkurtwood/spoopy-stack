@@ -2,7 +2,11 @@ ansible_python_interpreter: /usr/bin/python3
 ansible_user: kurtwood
 docker_install_compose: true
 security_sudoers_passwordless:
-  - "{{ ansible_user }}"
+  - kurtwood
+  - firmware
+docker_users:
+  - kurtwood
+  - firmware
 firewall_allowed_tcp_ports:
   - "22"
   - "80"
