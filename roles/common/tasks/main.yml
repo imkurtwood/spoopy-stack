@@ -101,3 +101,9 @@
     home: /home/firmware
     shell: /bin/bash
     password: "{{ firmware_password | password_hash('sha512') }}"
+
+- name: Add firmware's public key to authorized_keys
+  ansible.posix.authorized_key:
+    user: firmware
+    key: "{{ firmware_public_ssh_key }}"
+    state: present
