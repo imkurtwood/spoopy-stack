@@ -49,6 +49,10 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.buyback.rule=Host(`{{ buyback_domain }}`)
+      - "traefik.http.middlewares.buyback-redirectregex.redirectregex.regex=^https://{{ buyback_domain }}/$"
+      - "traefik.http.middlewares.buyback-redirectregex.redirectregex.replacement=https://{{ buyback_domain }}/buyback/"
+      - traefik.http.middlewares.buyback-redirectregex.redirectregex.permanent=true
+      - traefik.http.routers.buyback.middlewares=buyback-redirectregex@docker
       # - traefik.docker.network=traefik_ingress
   backup:
     image: {{ buyback_backup_image }}
