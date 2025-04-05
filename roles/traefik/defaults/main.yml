@@ -1,2 +1,5 @@
 traefik_tls_email: ""
 traefik_image: "traefik:v3.3.5"
+traefik_godns_image: "ghcr.io/timothyye/godns:3.2.3"
+traefik_godns_domains_proxied: false
+traefik_godns_cloudflare_api_token: ""

@@ -1,12 +1,19 @@
 buyback_nginx_port: 8080
-buyback_domain: "buyback.kurtwood.me"
+buyback_domain: "{{ sub_domains[1] }}.{{ domain_name }}"
 buyback_csrf_trusted_origins: "http://localhost:8080 https://{{ buyback_domain }}"
 buyback_allowed_hosts: "localhost,127.0.0.1,{{ buyback_domain }}"
 buyback_postgres_image: "postgres:16-alpine"
 buyback_redis_image: "redis:7-alpine"
 
+domain_name: "kurtwood.me"
+sub_domains:
+  - "wanderer"
+  - "buyback"
+
 wanderer_postgres_image: "postgres:16-alpine"
 wanderer_image: "wandererltd/community-edition:latest"
 wanderer_eve_route_builder_image: "dansylvest/eve-route-builder:main"
 wanderer_web_app_url: "https://{{ wanderer_domain }}"
-wanderer_domain: "wanderer.kurtwood.me"
+wanderer_domain: "{{ sub_domains[0] }}.{{ domain_name }}"
+traefik_godns_domains_proxied: true
+traefik_godns_image: "ghcr.io/timothyye/godns:3.2.3"

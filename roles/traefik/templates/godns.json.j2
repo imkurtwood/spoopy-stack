@@ -1,0 +1,19 @@
+{
+  "provider": "Cloudflare",
+  "login_token": "{{ traefik_godns_cloudflare_api_token }}",
+  "domains": [
+    {
+      "domain_name": "{{ domain_name }}",
+      "sub_domains": {{ sub_domains | to_json }}
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": [
+    "https://api.ipify.org",
+    "https://myip.biturl.top",
+    "https://api-ipv4.ip.sb/ip"
+  ],
+  "ip_type": "IPv4",
+  "interval": 300,
+  "proxied": {{ traefik_godns_domains_proxied }}
+}
