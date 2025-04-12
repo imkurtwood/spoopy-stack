@@ -12,5 +12,6 @@
   become: true
   roles:
     - traefik
+    - landing
     - buyback
     - wanderer

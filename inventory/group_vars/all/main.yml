@@ -1,5 +1,5 @@
 ansible_python_interpreter: /usr/bin/python3
-ansible_user: kurtwood
+ansible_user: kurtwood  # Might have to change this to your username
 docker_install_compose: true
 security_sudoers_passwordless:
   - kurtwood

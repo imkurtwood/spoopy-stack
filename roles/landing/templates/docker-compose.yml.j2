@@ -1,0 +1,16 @@
+services:
+  nginx:
+    image: {{ landing_nginx_image }}
+    volumes:
+      - ./html/:/usr/share/nginx/html
+    restart: always
+    networks:
+      - traefik_ingress
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.landing.rule=Host(`{{ domain_name }}`)
+
+# Needed for the reverse proxy (traefik) to work
+networks:
+  traefik_ingress:
+    external: true

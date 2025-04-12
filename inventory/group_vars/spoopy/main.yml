@@ -5,7 +5,7 @@ buyback_allowed_hosts: "localhost,127.0.0.1,{{ buyback_domain }}"
 buyback_postgres_image: "postgres:16-alpine"
 buyback_redis_image: "redis:7-alpine"
 
-domain_name: "kurtwood.me"
+domain_name: "kurtwood.me"  # Change when moving to Spoopy domain
 sub_domains:
   - "wanderer"
   - "buyback"

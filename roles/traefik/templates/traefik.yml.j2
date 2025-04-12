@@ -12,7 +12,7 @@ entryPoints:
       tls:
         certResolver: letsencrypt
         domains:
-          - main: {{ buyback_domain }}
+          - main: {{ domain_name }}
             sans:
               - "{{ buyback_domain }}"
               - "{{ wanderer_domain }}"
