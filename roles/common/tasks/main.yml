@@ -39,6 +39,8 @@
       - htop
       - net-tools
       - ufw
+      - python3-pip
+      - python3-passlib
     state: present
 
 - name: Configure timezone
@@ -102,8 +104,10 @@
     shell: /bin/bash
     password: "{{ firmware_password | password_hash('sha512') }}"
 
-- name: Add firmware's public key to authorized_keys
+- name: Add firmware's public keys to authorized_keys
   ansible.posix.authorized_key:
     user: firmware
-    key: "{{ firmware_public_ssh_key }}"
+    key: "{{ item }}"
     state: present
+  loop: "{{ firmware_public_ssh_keys }}"
+
