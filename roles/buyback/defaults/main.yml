@@ -2,7 +2,7 @@
 buyback_allowed_hosts: "localhost,127.0.0.1"
 buyback_debug: false
 # Database
-buyback_db_name: "buyback"
+buyback_db_name: "bbdb"
 buyback_db_username: "buyback"
 buyback_db_hostname: "db"
 buyback_db_port: 5432
