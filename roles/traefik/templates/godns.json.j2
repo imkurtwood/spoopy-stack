@@ -1,6 +1,6 @@
 {
-  "provider": "Cloudflare",
-  "login_token": "{{ traefik_godns_cloudflare_api_token }}",
+  "provider": "DigitalOcean",
+  "login_token": "{{ traefik_godns_digitalocean_api_token }}",
   "domains": [
     {
       "domain_name": "{{ domain_name }}",
@@ -14,6 +14,5 @@
     "https://api-ipv4.ip.sb/ip"
   ],
   "ip_type": "IPv4",
-  "interval": 300,
-  "proxied": {{ traefik_godns_domains_proxied }}
+  "interval": 300
 }

@@ -1,17 +1,19 @@
 buyback_nginx_port: 8080
 buyback_domain: "{{ sub_domains[1] }}.{{ domain_name }}"
-buyback_csrf_trusted_origins: "http://localhost:8080 https://{{ buyback_domain }}"
+buyback_csrf_trusted_origins: "http://localhost:8080,https://{{ buyback_domain }}"
 buyback_allowed_hosts: "localhost,127.0.0.1,{{ buyback_domain }}"
 buyback_postgres_image: "postgres:16-alpine"
 buyback_redis_image: "redis:7-alpine"
 
-domain_name: "kurtwood.me"  # Change when moving to Spoopy domain
+domain_name: "spoopy.space"  # Change when moving to Spoopy domain
 sub_domains:
   - "wanderer"
   - "buyback"
+  - "@"
+  - "www"
 
 wanderer_postgres_image: "postgres:16-alpine"
-wanderer_image: "wandererltd/community-edition:latest"
+wanderer_image: "wandererltd/community-edition:1.59.11"
 wanderer_eve_route_builder_image: "dansylvest/eve-route-builder:main"
 wanderer_web_app_url: "https://{{ wanderer_domain }}"
 wanderer_domain: "{{ sub_domains[0] }}.{{ domain_name }}"

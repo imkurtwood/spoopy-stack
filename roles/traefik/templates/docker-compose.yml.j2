@@ -12,15 +12,15 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - {{ ansible_env.HOME }}/traefik/traefik.yml:/etc/traefik/traefik.yml
       - traefik-data:/etc/traefik/
-  # godns:
-  #   image: {{ traefik_godns_image }}
-  #   restart: unless-stopped
-  #   ports:
-  #     - 9000:9000
-  #   volumes:
-  #     - {{ ansible_env.HOME }}/traefik/godns.json:/etc/godns/godns.json
-  #   environment:
-  #     - CONFIG: /etc/godns/godns.json
+  godns:
+    image: {{ traefik_godns_image }}
+    restart: unless-stopped
+    ports:
+      - 9000:9000
+    volumes:
+      - {{ ansible_env.HOME }}/traefik/godns.json:/etc/godns/godns.json
+    environment:
+      - CONFIG=/etc/godns/godns.json
 networks:
   ingress:
 volumes:
