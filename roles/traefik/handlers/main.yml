@@ -1,0 +1,12 @@
+---
+- name: Restart Traefik
+  community.docker.docker_container:
+    name: traefik-traefik-1
+    state: started
+    restart: true
+
+- name: Restart godns
+  community.docker.docker_container:
+    name: traefik-godns-1
+    state: started
+    restart: true

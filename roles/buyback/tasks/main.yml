@@ -28,6 +28,9 @@
     src: ".env.j2"
     dest: "{{ buyback_dir }}/.env"
     mode: "0644"
+    notify:
+      - Restart Buyback App
+      - Restart Buyback Celery
 
 - name: Copy docker-compose.yml file
   ansible.builtin.template:

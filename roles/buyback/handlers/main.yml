@@ -1,0 +1,12 @@
+---
+- name: Restart Buyback App
+  community.docker.docker_container:
+    name: buyback-web-1
+    state: started
+    restart: true
+
+- name: Restart Buyback Celery
+  community.docker.docker_container:
+    name: buyback-celery-1
+    state: started
+    restart: true
