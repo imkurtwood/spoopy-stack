@@ -1,1 +1,1 @@
-landing_nginx_image: "nginx:1-alpine"
+landing_image: "ghcr.io/olf-folks/spoopy-landing:1"
