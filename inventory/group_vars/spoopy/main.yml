@@ -13,8 +13,9 @@ sub_domains:
   - "www"
 
 wanderer_postgres_image: "postgres:16-alpine"
-wanderer_image: "wandererltd/community-edition:latest"
+wanderer_image: "wandererltd/community-edition-arm:1.81"
 wanderer_eve_route_builder_image: "dansylvest/eve-route-builder:main"
+wanderer_kills_image: "guarzo/wanderer-kills:1.5.5"
 wanderer_web_app_url: "https://{{ wanderer_domain }}"
 wanderer_domain: "{{ sub_domains[0] }}.{{ domain_name }}"
 traefik_godns_domains_proxied: true

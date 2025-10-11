@@ -11,8 +11,9 @@ wanderer_db_hostname: "wanderer_db"
 wanderer_db_port: 5432
 # Docker
 wanderer_postgres_image: "postgres:16-alpine"
-wanderer_image: "wandererltd/community-edition:1.59.1"
+wanderer_image: "wandererltd/community-edition-arm:1.81"
 wanderer_backup_image: "itbm/postgres-backup-s3:latest"
+wanderer_kills_image: "guarzo/wanderer-kills:1.5.5"
 # Backup
 wanderer_s3_bucket: "spoopy-backups"
 wanderer_s3_prefix: "wanderer"
