@@ -13,6 +13,15 @@ services:
       - db-data:/var/lib/postgresql/data
     env_file:
       - .env
+  
+  # Disabled until this is solved https://discord.com/channels/1260272573371908128/1420991912671838260/1420991912671838260
+  # wanderer-kills:
+  #   image: {{ wanderer_kills_image }}
+  #   container_name: wanderer-kills
+  #   environment:
+  #     PORT: 4004
+  #     MIX_ENV: prod
+  #   restart: unless-stopped
 
   wanderer:
     image: {{ wanderer_image }}
@@ -36,6 +45,8 @@ services:
       - CUSTOM_ROUTE_BASE_URL=http://eve-route-builder:2001
       - PHX_SERVER=true
       - ECTO_IPV6=false
+      # - WANDERER_KILLS_SERVICE_ENABLED=true
+      # - WANDERER_KILLS_BASE_URL=ws://wanderer-kills:4004
       - ERL_AFLAGS=-proto_dist inet6_tcp
       - ERL_MAX_PORTS=1024
     env_file:
