@@ -35,11 +35,17 @@ pre-commit install
 
 ## Usage
 
+### Running the Dev Playbook
+To run the playbook against all hosts:
+```bash
+ANSIBLE_REMOTE_USER=yourusername ansible-playbook dev.yml -i ./inventory/dev --vault-pass-file .vault_pass --ask-become-pass
+```
+
 ### Running the Playbook
 
 To run the playbook against all hosts:
 ```bash
-ansible-playbook site.yml --vault-pass-file .vault_pass --ask-become-pass
+ANSIBLE_REMOTE_USER=yourusername ansible-playbook site.yml --vault-pass-file .vault_pass --ask-become-pass
 ```
 
 ### Using Vault
