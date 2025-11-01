@@ -7,7 +7,7 @@
     - geerlingguy.security
     - otel
     - geerlingguy.docker
-- name: Install buyback services
+- name: Install spoopy services
   hosts: spoopy
   become: true
   roles:
