@@ -1,4 +1,14 @@
 ---
+- name: Check NTP service
+  shell: |
+    if systemctl is-active --quiet systemd-timesyncd; then
+      echo "timesyncd"
+    elif systemctl is-active --quiet chrony; then
+      echo "chrony"
+    fi
+  register: ntp_service
+  changed_when: false
+
 - name: Disable NTP temporarily
   ansible.legacy.command:
     cmd: timedatectl set-ntp false
@@ -19,6 +29,16 @@
     name: systemd-timesyncd
     state: started
     enabled: true
+  when: 
+    - ntp_service.stdout == 'timesyncd'
+
+- name: Ensure chrony is running and enabled
+  ansible.legacy.service:
+    name: chrony
+    state: started
+    enabled: true
+  when:
+    - ntp_service.stdout == 'chrony'
 
 - name: Update apt cache
   ansible.legacy.apt:

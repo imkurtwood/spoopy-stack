@@ -15,3 +15,6 @@
     - landing
     - buyback
     - wanderer
+  vars:
+    buyback_backup_enabled: true
+    wanderer_backup_enabled: true

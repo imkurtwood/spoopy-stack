@@ -1,13 +1,24 @@
 services:
   web:
-    build: .
+    image: {{ buyback_image }}
     restart: always
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     env_file:
       - ./.env
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.buyback.rule=Host(`{{ buyback_domain }}`)
+      - traefik.http.middlewares.buyback-redirectregex.redirectregex.regex=^https://{{ buyback_domain }}/$
+      - traefik.http.middlewares.buyback-redirectregex.redirectregex.replacement=https://{{ buyback_domain }}/buyback/
+      - traefik.http.middlewares.buyback-redirectregex.redirectregex.permanent=true
+      - traefik.http.routers.buyback.middlewares=buyback-redirectregex@docker
+      - traefik.http.routers.buyback.port=8000
     volumes:
       - static_volume:/code/staticfiles
       - media_volume:/code/mediafiles
+    networks:
+      - default
+      - traefik_ingress
     depends_on:
       - redis
       - db
@@ -23,7 +34,7 @@ services:
     image: {{ buyback_redis_image }}
 
   celery:
-    build: .
+    image: {{ buyback_image }}
     restart: always
     command: celery -A config worker -l info
     volumes:
@@ -34,32 +45,13 @@ services:
       - db
       - redis
       - web
-
-  nginx:
-    build: ./nginx
-    restart: always
-    volumes:
-      - static_volume:/code/staticfiles
-      - media_volume:/code/mediafiles
-    networks:
-      - default
-      - traefik_ingress
-    depends_on:
-      - web
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.buyback.rule=Host(`{{ buyback_domain }}`)
-      - "traefik.http.middlewares.buyback-redirectregex.redirectregex.regex=^https://{{ buyback_domain }}/$"
-      - "traefik.http.middlewares.buyback-redirectregex.redirectregex.replacement=https://{{ buyback_domain }}/buyback/"
-      - traefik.http.middlewares.buyback-redirectregex.redirectregex.permanent=true
-      - traefik.http.routers.buyback.middlewares=buyback-redirectregex@docker
-      # - traefik.docker.network=traefik_ingress
+  {% if buyback_backup_enabled %}
   backup:
     image: {{ buyback_backup_image }}
     restart: always
     env_file:
       - ./.env
-
+  {% endif %}
 networks:
   traefik_ingress:
     external: true
