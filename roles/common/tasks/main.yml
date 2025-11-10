@@ -114,7 +114,6 @@
   ansible.builtin.user:
     name: firmware
     groups:
-      - firmware
       - docker
       - sudo
     append: true
