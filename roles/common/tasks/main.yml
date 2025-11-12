@@ -1,14 +1,4 @@
 ---
-- name: Check NTP service
-  shell: |
-    if systemctl is-active --quiet systemd-timesyncd; then
-      echo "timesyncd"
-    elif systemctl is-active --quiet chrony; then
-      echo "chrony"
-    fi
-  register: ntp_service
-  changed_when: false
-
 - name: Disable NTP temporarily
   ansible.legacy.command:
     cmd: timedatectl set-ntp false
@@ -29,16 +19,6 @@
     name: systemd-timesyncd
     state: started
     enabled: true
-  when: 
-    - ntp_service.stdout == 'timesyncd'
-
-- name: Ensure chrony is running and enabled
-  ansible.legacy.service:
-    name: chrony
-    state: started
-    enabled: true
-  when:
-    - ntp_service.stdout == 'chrony'
 
 - name: Update apt cache
   ansible.legacy.apt:
@@ -110,23 +90,23 @@
   ansible.builtin.apt:
     clean: true
 
-- name: Create firmware user
+- name: Create superuser user
   ansible.builtin.user:
-    name: firmware
+    name: superuser
     groups:
+      - superuser
       - docker
       - sudo
     append: true
     state: present
     create_home: true
-    home: /home/firmware
+    home: /home/superuser
     shell: /bin/bash
-    password: "{{ firmware_password | password_hash('sha512') }}"
+    password: "{{ superuser_password | password_hash('sha512') }}"
 
-- name: Add firmware's public keys to authorized_keys
+- name: Add superuser's public keys to authorized_keys
   ansible.posix.authorized_key:
-    user: firmware
+    user: superuser
     key: "{{ item }}"
     state: present
-  loop: "{{ firmware_public_ssh_keys }}"
-
+  loop: "{{ superuser_public_ssh_keys }}"
