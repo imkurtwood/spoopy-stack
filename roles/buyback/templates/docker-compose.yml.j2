@@ -1,5 +1,5 @@
 services:
-  web:
+  app:
     image: {{ buyback_image }}
     restart: always
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
@@ -12,13 +12,13 @@ services:
       - traefik.http.middlewares.buyback-redirectregex.redirectregex.replacement=https://{{ buyback_domain }}/buyback/
       - traefik.http.middlewares.buyback-redirectregex.redirectregex.permanent=true
       - traefik.http.routers.buyback.middlewares=buyback-redirectregex@docker
-      - traefik.http.routers.buyback.port=8000
+      - traefik.http.services.buyback.loadbalancer.server.port=8000
+    networks:
+      - traefik_ingress
+      - default
     volumes:
       - static_volume:/code/staticfiles
       - media_volume:/code/mediafiles
-    networks:
-      - default
-      - traefik_ingress
     depends_on:
       - redis
       - db
@@ -44,7 +44,7 @@ services:
     depends_on:
       - db
       - redis
-      - web
+      - app
   {%- if buyback_backup_enabled %}
   backup:
     image: {{ buyback_backup_image }}

@@ -8,7 +8,7 @@ services:
       - traefik_ingress
     labels:
       - traefik.enable=true
-      - traefik.http.routers.landing.rule=Host(`{{ domain_name }}`)
+      - traefik.http.routers.landing.rule=Host(`{{ landing_domain }}`)
 
 # Needed for the reverse proxy (traefik) to work
 networks:

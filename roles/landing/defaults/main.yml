@@ -1,1 +1,2 @@
 landing_image: "nginx:1-alpine"
+landing_domain: "spoopy.net"

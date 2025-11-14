@@ -14,9 +14,10 @@
   vars:
     buyback_domain: "{{ sub_domains[1] }}.{{ domain_name }}"
     landing_domain: "{{ sub_domains[0] }}.{{ domain_name }}"
+    domain_name: "spoopy.net"
     sub_domains:
       - "dev"
-      - "dev.buyback"
+      - "buybacktest"
     # Adding images here in case we need to bump in dev for testing purposes.
     buyback_postgres_image: "postgres:17-alpine"
     buyback_redis_image: "redis:8-alpine"
