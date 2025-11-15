@@ -19,7 +19,8 @@
       - "dev"
       - "buybacktest"
     # Adding images here in case we need to bump in dev for testing purposes.
-    buyback_postgres_image: "postgres:17-alpine"
+    buyback_postgres_image: "postgres:16-alpine"
+    buyback_image: "ghcr.io/olf-folks/spoopy-buyback:pr-2"
     buyback_redis_image: "redis:8-alpine"
     traefik_godns_image: "ghcr.io/timothyye/godns:3.2.4"
   roles:
