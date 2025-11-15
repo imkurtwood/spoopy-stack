@@ -16,11 +16,7 @@ services:
     networks:
       - traefik_ingress
       - default
-    volumes:
-      - static_volume:/code/staticfiles
-      - media_volume:/code/mediafiles
     depends_on:
-      - redis
       - db
   db:
     image: {{ buyback_postgres_image }}
@@ -30,28 +26,13 @@ services:
     env_file:
       - ./.env
 
-  redis:
-    image: {{ buyback_redis_image }}
-
-  celery:
-    image: {{ buyback_image }}
-    restart: always
-    command: celery -A config worker -l info
-    volumes:
-      - .:/code
-    env_file:
-      - ./.env
-    depends_on:
-      - db
-      - redis
-      - app
-  {%- if buyback_backup_enabled %}
+{%- if buyback_backup_enabled %}
   backup:
     image: {{ buyback_backup_image }}
     restart: always
     env_file:
       - ./.env
-  {%- endif %}
+{%- endif %}
 
 networks:
   traefik_ingress:
@@ -59,5 +40,3 @@ networks:
 
 volumes:
   postgres_data:
-  static_volume:
-  media_volume:
