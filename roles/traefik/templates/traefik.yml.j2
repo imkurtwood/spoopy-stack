@@ -11,11 +11,19 @@ entryPoints:
     http:
       tls:
         certResolver: letsencrypt
+{% if sub_domains[0] == "dev" %}
+        domains:
+          - main: {{ landing_domain }}
+            sans:
+              - "{{ buyback_domain }}"
+{% else %}
         domains:
           - main: {{ domain_name }}
             sans:
               - "{{ buyback_domain }}"
               - "{{ wanderer_domain }}"
+{% endif %}
+
 api:
   insecure: true
   dashboard: true

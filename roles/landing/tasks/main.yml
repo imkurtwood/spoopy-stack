@@ -1,11 +1,4 @@
 ---
-- name: Clone repository
-  ansible.builtin.git:
-    repo: "https://github.com/olf-folks/spoopy-landing.git"
-    dest: "{{ ansible_env.HOME }}/landing"
-    version: "main"
-    force: true
-
 - name: Template docker-compose.yml
   ansible.builtin.template:
     src: "docker-compose.yml.j2"

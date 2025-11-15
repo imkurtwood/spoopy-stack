@@ -14,12 +14,14 @@
   vars:
     buyback_domain: "{{ sub_domains[1] }}.{{ domain_name }}"
     landing_domain: "{{ sub_domains[0] }}.{{ domain_name }}"
+    domain_name: "spoopy.net"
     sub_domains:
       - "dev"
-      - "dev.buyback"
+      - "buybacktest"
     # Adding images here in case we need to bump in dev for testing purposes.
     buyback_postgres_image: "postgres:16-alpine"
-    buyback_redis_image: "redis:7-alpine"
+    buyback_image: "ghcr.io/olf-folks/spoopy-buyback:pr-2"
+    buyback_redis_image: "redis:8-alpine"
     traefik_godns_image: "ghcr.io/timothyye/godns:3.2.4"
   roles:
     - traefik

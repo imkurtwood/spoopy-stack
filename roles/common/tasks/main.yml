@@ -1,36 +1,56 @@
 ---
+- name: Check NTP service
+  shell: |
+    if systemctl is-active --quiet systemd-timesyncd; then
+      echo "timesyncd"
+    elif systemctl is-active --quiet chrony; then
+      echo "chrony"
+    fi
+  register: ntp_service
+  changed_when: false
+
 - name: Disable NTP temporarily
-  ansible.legacy.command:
+  ansible.builtin.command:
     cmd: timedatectl set-ntp false
   changed_when: false
 
 - name: Set system time from runner
-  ansible.legacy.command:
+  ansible.builtin.command:
     cmd: "date -s '{{ ansible_date_time.iso8601 }}'"
   changed_when: false
 
 - name: Re-enable NTP
-  ansible.legacy.command:
+  ansible.builtin.command:
     cmd: timedatectl set-ntp true
   changed_when: false
 
 - name: Ensure systemd-timesyncd is running and enabled
-  ansible.legacy.service:
+  ansible.builtin.service:
     name: systemd-timesyncd
     state: started
     enabled: true
+  when: 
+    - ntp_service.stdout == 'timesyncd'
+
+- name: Ensure chrony is running and enabled
+  ansible.builtin.service:
+    name: chrony
+    state: started
+    enabled: true
+  when:
+    - ntp_service.stdout == 'chrony'
 
 - name: Update apt cache
-  ansible.legacy.apt:
+  ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
 
 - name: Upgrade all packages
-  ansible.legacy.apt:
+  ansible.builtin.apt:
     upgrade: full
 
 - name: Install common packages
-  ansible.legacy.apt:
+  ansible.builtin.apt:
     name:
       - vim
       - curl
@@ -94,7 +114,6 @@
   ansible.builtin.user:
     name: firmware
     groups:
-      - firmware
       - docker
       - sudo
     append: true

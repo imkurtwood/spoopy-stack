@@ -1,1 +1,2 @@
-landing_nginx_image: "nginx:1-alpine"
+landing_image: "ghcr.io/olf-folks/spoopy-web:latest"
+landing_domain: "spoopy.net"

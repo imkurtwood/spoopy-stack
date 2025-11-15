@@ -10,27 +10,20 @@
     name: traefik_ingress
     state: present
 
-- name: Clone Buyback repo
-  ansible.builtin.git:
-    repo: "https://github.com/olf-folks/spoopy-buyback-2.git"
-    dest: "{{ buyback_dir }}"
-    version: "main"
-    force: true
-
-- name: Copy Dockerfile
-  ansible.builtin.template:
-    src: "Dockerfile.j2"
-    dest: "{{ buyback_dir }}/Dockerfile"
-    mode: "0644"
+- name: Create buyback directory
+  ansible.builtin.file:
+    path: "{{ buyback_dir }}"
+    state: directory
+    mode: "0755"
 
 - name: Copy .env file
   ansible.builtin.template:
     src: ".env.j2"
     dest: "{{ buyback_dir }}/.env"
     mode: "0644"
-    notify:
-      - Restart Buyback App
-      - Restart Buyback Celery
+  notify:
+    - Restart Buyback App
+    - Restart Buyback Celery
 
 - name: Copy docker-compose.yml file
   ansible.builtin.template:
@@ -46,7 +39,6 @@
     files:
       - docker-compose.yml
     pull: always
-    build: always
     state: present
 
 - name: Check if containers are running
