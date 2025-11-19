@@ -55,13 +55,13 @@ services:
       - traefik.enable=true
       - traefik.http.routers.wanderer.rule=Host(`{{ wanderer_domain }}`)
 
-  {% if wanderer_backup_enabled %}
+{% if wanderer_backup_enabled %}
   backup:
     image: {{ wanderer_backup_image }}
     restart: always
     env_file:
       - .env
-  {% endif %}
+{% endif %}
 volumes:
   db-data:
     driver: local

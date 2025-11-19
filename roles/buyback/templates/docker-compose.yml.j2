@@ -25,13 +25,13 @@ services:
     env_file:
       - ./.env
 
-{%- if buyback_backup_enabled %}
+{% if buyback_backup_enabled %}
   backup:
     image: {{ buyback_backup_image }}
     restart: always
     env_file:
       - ./.env
-{%- endif %}
+{% endif %}
 
 networks:
   traefik_ingress:
