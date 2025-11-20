@@ -27,6 +27,7 @@ receivers:
     endpoint: unix:///var/run/docker.sock
     collection_interval: 15s
     initial_delay: 5s
+    api_version: "1.52"
     container_labels_to_metric_labels:
       container.name: container-name
       container.id: container-id
