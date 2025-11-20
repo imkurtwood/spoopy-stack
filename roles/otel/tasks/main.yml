@@ -2,12 +2,12 @@
 - name: Download OTEL Collector DEB
   ansible.builtin.get_url:
     url: "{{ otel_collector_deb_url }}"
-    dest: /tmp/otelcol-contrib.deb
+    dest: /tmp/otelcol-contrib_{{ otel_collector_version }}.deb
     mode: '0644'
 
 - name: Install OTEL Collector
   ansible.builtin.apt:
-    deb: /tmp/otelcol-contrib.deb
+    deb: /tmp/otelcol-contrib_{{ otel_collector_version }}.deb
     state: present
     update_cache: true
 
